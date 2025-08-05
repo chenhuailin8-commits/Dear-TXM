@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>一封未能送给你的信</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0 auto;
+        }
+        .bigbox{
+            width: 100%;
+            height: 1000px;
+            background-color: #f1f1f1;
+            padding-top: 56px;
+        }
+        .box1{
+            
+            width: 100%;
+            max-width: 614px;
+            height: 800px;
+            margin: 0 auto;
+            background: url("2121.jpg") no-repeat  ;
+            background-size: 100%;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            background-size: contain；
+        }
+     
+        .tubiao{
+            width: 28px;
+            height: 28px;
+            position: absolute;
+            right: 60px;
+            top: 40px;
+            opacity: 0.8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .tubiao:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        .tubiao.playing {
+            animation: rotate 4s linear infinite;
+        }
+        
+      
+        
+        /* 旋转动画 */
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* 音乐状态提示 */
+        .music-status {
+            position: absolute;
+            top: 75px;
+            right: 28px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+        }
+        .tubiao:hover + .music-status {
+            opacity: 1;
+        }
+       
+    </style>
+</head>
+
+<body>
+    <div class="bigbox">
+    <div class="box1">
+       <div class="tubiao" id="musicButton"><img src="音乐图标 (1).png" alt="" width="28px"></div>
+        <div class="music-status" id="musicStatus">播放我的录音</div></div>
+        
+        </div>
+    
+   <audio id="backgroundMusic" loop>
+        <source src="CMJ - 所念皆星河.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="voiceRecording">
+        <source src="录音.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+         document.addEventListener('DOMContentLoaded', function() {
+            const musicButton = document.getElementById('musicButton');
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            const voiceRecording = document.getElementById('voiceRecording');
+            const musicStatus = document.getElementById('musicStatus');
+            const nowPlaying = document.getElementById('nowPlaying');
+            
+            let isPlayingRecording = false;
+            let backgroundMusicPlaying = false;
+            
+            // 尝试自动播放背景音乐
+            function autoPlayBackgroundMusic() {
+                backgroundMusic.play()
+                    .then(() => {
+                        backgroundMusicPlaying = true;
+                        musicButton.classList.add('playing');
+                        nowPlaying.textContent = "背景音乐播放中";
+                    })
+                    .catch(error => {
+                        console.log("自动播放被阻止，需要用户交互");
+                        nowPlaying.textContent = "点击播放背景音乐";
+                    });
+            }
+            
+            // 页面加载时尝试播放背景音乐
+            autoPlayBackgroundMusic();
+            
+            musicButton.addEventListener('click', function() {
+                if (isPlayingRecording) {
+                    // 停止录音，恢复背景音乐
+                    voiceRecording.pause();
+                    backgroundMusic.play();
+                    isPlayingRecording = false;
+                    backgroundMusicPlaying = true;
+                    musicStatus.textContent = "背景音乐恢复播放";
+                    nowPlaying.textContent = "背景音乐播放中";
+                    musicButton.classList.add('playing');
+                } else {
+                    // 暂停背景音乐，播放录音
+                    backgroundMusic.pause();
+                    voiceRecording.play();
+                    isPlayingRecording = true;
+                    backgroundMusicPlaying = false;
+                    musicStatus.textContent = "录音播放中...";
+                    nowPlaying.textContent = "录音播放中";
+                    musicButton.classList.add('playing');
+                }
+                
+                // 显示状态提示
+                musicStatus.style.opacity = "1";
+                setTimeout(() => {
+                    musicStatus.style.opacity = "0";
+                }, 2000);
+            });
+            
+            // 录音播放结束时自动恢复背景音乐
+            voiceRecording.addEventListener('ended', function() {
+                if (isPlayingRecording) {
+                    backgroundMusic.play();
+                    isPlayingRecording = false;
+                    backgroundMusicPlaying = true;
+                    nowPlaying.textContent = "背景音乐播放中";
+                    musicStatus.textContent = "录音结束，背景音乐恢复";
+                    musicStatus.style.opacity = "1";
+                    setTimeout(() => {
+                        musicStatus.style.opacity = "0";
+                    }, 2000);
+                }
+            });
+            
+            // 鼠标悬停显示提示
+            musicButton.addEventListener('mouseenter', function() {
+                if (isPlayingRecording) {
+                    musicStatus.textContent = "点击恢复背景音乐";
+                } else {
+                    musicStatus.textContent = "点击播放录音";
+                }
+                musicStatus.style.opacity = "1";
+            });
+            
+            musicButton.addEventListener('mouseleave', function() {
+                setTimeout(() => {
+                    musicStatus.style.opacity = "0";
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html>
