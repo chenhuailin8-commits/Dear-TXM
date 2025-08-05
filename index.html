@@ -82,12 +82,12 @@
         
         </div>
     
-   <audio id="backgroundMusic" loop>
-        <source src="CMJ - 所念皆星河.mp3" type="audio/mpeg">
+  <audio id="backgroundMusic" loop>
+        <source src="录音.mp3" type="audio/mpeg">
     </audio>
     
     <audio id="voiceRecording">
-        <source src="录音.mp3" type="audio/mpeg">
+        <source src="CMJ - 所念皆星河.mp3" type="audio/mpeg">
     </audio>
 
     <script>
@@ -125,7 +125,7 @@
                     backgroundMusic.play();
                     isPlayingRecording = false;
                     backgroundMusicPlaying = true;
-                    musicStatus.textContent = "背景音乐恢复播放";
+                    musicStatus.textContent = "录音恢复播放";
                     nowPlaying.textContent = "背景音乐播放中";
                     musicButton.classList.add('playing');
                 } else {
@@ -134,8 +134,8 @@
                     voiceRecording.play();
                     isPlayingRecording = true;
                     backgroundMusicPlaying = false;
-                    musicStatus.textContent = "录音播放中...";
-                    nowPlaying.textContent = "录音播放中";
+                    musicStatus.textContent = "音乐播放中...";
+                    nowPlaying.textContent = "音乐播放中";
                     musicButton.classList.add('playing');
                 }
                 
@@ -164,9 +164,9 @@
             // 鼠标悬停显示提示
             musicButton.addEventListener('mouseenter', function() {
                 if (isPlayingRecording) {
-                    musicStatus.textContent = "点击恢复背景音乐";
+                    musicStatus.textContent = "播放录音....";
                 } else {
-                    musicStatus.textContent = "点击播放录音";
+                    musicStatus.textContent = "播放背景音乐";
                 }
                 musicStatus.style.opacity = "1";
             });
@@ -180,3 +180,4 @@
     </script>
 </body>
 </html>
+
